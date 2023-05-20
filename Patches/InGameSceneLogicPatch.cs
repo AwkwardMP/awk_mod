@@ -61,6 +61,7 @@ namespace AwkwardMP.Patches
                 Instance = __instance;
 
             m_AverageScorePercentage = 0;
+            m_scoreEntryList.Clear();
 
             switch (Globals.GameState.CurrentGameType)
             {
@@ -88,7 +89,7 @@ namespace AwkwardMP.Patches
             int num = CalculateScorePercentageGeneral();
             m_AverageScorePercentage = num;
 
-            AwkwardClient.ShowScore(m_AverageScorePercentage, new { }, isEndOfGame);
+            AwkwardClient.ShowScore(m_AverageScorePercentage, new { }, isEndOfGame, false);
         }
 
         private static void ShowForSoloDuo(bool isEndOfGame)
@@ -96,7 +97,7 @@ namespace AwkwardMP.Patches
             int num = CalculateScorePercentageGeneral();
             m_AverageScorePercentage = num;
        
-            AwkwardClient.ShowScore(m_AverageScorePercentage, new { }, isEndOfGame);
+            AwkwardClient.ShowScore(m_AverageScorePercentage, new { }, isEndOfGame, false);
         }
 
         private static void ShowForMatchup(bool isEndOfGame)
@@ -122,11 +123,12 @@ namespace AwkwardMP.Patches
             m_AverageScorePercentage /= m_scoreEntryList.Count;
             m_scoreEntryList.Sort(new ScoreEntryComparer());
 
-            AwkwardClient.ShowScore(m_AverageScorePercentage, new { scores = m_scoreEntryList }, isEndOfGame);
+            AwkwardClient.ShowScore(m_AverageScorePercentage, new { scores = m_scoreEntryList }, isEndOfGame, false);
         }
 
         private static void ShowForMultipleDuo(bool isEndOfGame)
         {
+            
             for (int i = 0; i < Globals.GameState.GetNumberOfTeams(); i++)
             {
                 int num = 0;
@@ -134,7 +136,7 @@ namespace AwkwardMP.Patches
                 CalculateTeamScores(i, out num2, out num);
 
                 int scorePercentage = Globals.GameState.GetScorePercentage((double)num2, (double)num);
-                string teamPlayerName = Globals.GameState.GetTeamPlayerName(i, 0);
+                string teamPlayerName = Globals.GameState.GetTeamPlayerName(i, 0) + " & " + Globals.GameState.GetTeamPlayerName(i, 1);
                 
                 m_scoreEntryList.Add(new ScoreEntry
                 {
@@ -148,7 +150,7 @@ namespace AwkwardMP.Patches
             m_AverageScorePercentage /= m_scoreEntryList.Count;
             m_scoreEntryList.Sort(new ScoreEntryComparer());
 
-            AwkwardClient.ShowScore(m_AverageScorePercentage, new { scores = m_scoreEntryList }, isEndOfGame);
+            AwkwardClient.ShowScore(m_AverageScorePercentage, new { scores = m_scoreEntryList }, isEndOfGame, true);
         }
 
         private static void ShowForLiveShow(bool isEndOfGame)
@@ -180,7 +182,7 @@ namespace AwkwardMP.Patches
                 m_AverageScorePercentage /= m_scoreEntryList.Count;
             }
 
-            AwkwardClient.ShowScore(m_AverageScorePercentage, new { scores = m_scoreEntryList }, isEndOfGame);
+            AwkwardClient.ShowScore(m_AverageScorePercentage, new { scores = m_scoreEntryList }, isEndOfGame, false);
         }
 
 

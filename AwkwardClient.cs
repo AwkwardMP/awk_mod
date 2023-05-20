@@ -222,7 +222,7 @@ namespace AwkwardMP
             SendMessage("H_SetMaxPlayers", _params);
         }
 
-        public static void ShowScore(int m_AverageScorePercentage, object playerScore, bool isEndOfGame)
+        public static void ShowScore(int m_AverageScorePercentage, object playerScore, bool isEndOfGame, bool isTeamGame)
         {
             
             object _params = new
@@ -230,7 +230,8 @@ namespace AwkwardMP
                 roomId = RoomCode,
                 avgScore = m_AverageScorePercentage,
                 playerScore = playerScore,
-                isEndOfGame = isEndOfGame
+                isEndOfGame = isEndOfGame,
+                isTeamGame = isTeamGame
             };
 
             SendMessage("H_ShowScore", _params);
