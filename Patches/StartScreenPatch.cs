@@ -47,6 +47,9 @@ namespace AwkwardMP.Patches
         {
             if (modTextObject == null) return;
             modTextObject.SetActive(true);
+
+
+            AwkwardClient.StartSocket();
         }
 
         [HarmonyPostfix]
@@ -57,6 +60,7 @@ namespace AwkwardMP.Patches
             if (modText == null) return;
 
             modText.SetActive(false);
+
         }
     }
 }

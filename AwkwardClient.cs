@@ -46,9 +46,11 @@ namespace AwkwardMP
 
         private static GameObject connectStatusObject = null;
         private static GameObject roomCodeObject = null;
+        private static GameObject playerListObject = null;
 
         private static TMPro.TMP_Text roomCodeTextComponent = null;
         private static TMPro.TMP_Text connectedTextObject = null;
+        
 
 
         private static WebSocket wsClient = null;
@@ -56,6 +58,7 @@ namespace AwkwardMP
 
         private static bool _initialized = false;
         private static Dictionary<int, string> connectedPlayers = new Dictionary<int, string>();
+        private static Dictionary<int, TMPro.TMP_Text> connectedPlayersObject = new Dictionary<int, TMPro.TMP_Text>();
 
         public static void Init()
         {
@@ -96,11 +99,9 @@ namespace AwkwardMP
             connectedText.text = "Disconnected";
             connectedText.alignment = TMPro.TextAlignmentOptions.Left;
 
-
-
-
             connectStatusObject = GameObject.Find("ConnectStatus");
             connectedTextObject = connectedText;
+
 
 
             var roomCodeObj = GameObject.Instantiate<Transform>(connectedObj, connectedObj.parent);
@@ -108,7 +109,7 @@ namespace AwkwardMP
             roomCodeObj.transform.localPosition = new Vector3(-1645.0f, 900.0f, roomCodeObj.transform.localPosition.z);
 
             roomCodeTextComponent = roomCodeObj.transform.GetComponent<TMPro.TMP_Text>();
-            roomCodeTextComponent.text = "Room:";
+            roomCodeTextComponent.text = "Room: ------";
             roomCodeTextComponent.fontSize = 64;
             roomCodeTextComponent.alignment = TMPro.TextAlignmentOptions.Center;
 
@@ -120,7 +121,20 @@ namespace AwkwardMP
                 GUIUtility.systemCopyBuffer = RoomCode;
             });
 
-            ToggleRoomCode(false);
+            ToggleRoomCode(true);
+
+            var playerListObj = GameObject.Instantiate<Transform>(connectedObj.transform, connectedObj.transform);
+            playerListObj.name = "PlayerList";
+            playerListObj.transform.localPosition = new Vector3(-180.0f, -250.0f, playerListObj.transform.localPosition.z);
+
+            var playerListTransform = playerListObj.transform.GetComponent<TMPro.TMP_Text>();
+            playerListTransform.text = "Players:";
+            playerListTransform.alignment = TMPro.TextAlignmentOptions.Center;
+            playerListTransform.fontStyle = TMPro.FontStyles.Underline;
+            playerListTransform.fontSize = 55;
+
+
+            playerListObject = GameObject.Find("PlayerList");
         }
 
         private static void UpdateConnectionSprite()
@@ -149,7 +163,7 @@ namespace AwkwardMP
         {
             if (show)
             {
-                roomCodeTextComponent.text = "Room: " + RoomCode + "\n(F1 to Hide)";
+                roomCodeTextComponent.text = "Room: " + (RoomCode == null ? "" : RoomCode)+ "\n(F1 to Hide)";
                 roomCodeObject.SetActive(true);
             }
             else
@@ -350,6 +364,14 @@ namespace AwkwardMP
             }
         }
 
+        private static void OnPlayerLeave(int _playerIndex)
+        {
+            if(connectedPlayersObject.ContainsKey(_playerIndex))
+            {
+                connectedPlayersObject.Remove(_playerIndex);
+            }
+        }
+
         private static void OnChangePlayerName(int _playerIndex, string _newPlayerName)
         {
             try
@@ -371,6 +393,27 @@ namespace AwkwardMP
                 connectedPlayers[_playerIndex] = _newPlayerName;
             } else {
                 connectedPlayers.Add(_playerIndex, _newPlayerName);
+            }
+
+            if (connectedPlayersObject.ContainsKey(_playerIndex))
+            {
+                connectedPlayersObject[_playerIndex].text = _newPlayerName;
+            }
+            else
+            {
+                var connectedPlayerNameObj = GameObject.Instantiate<Transform>(playerListObject.transform, playerListObject.transform);
+                connectedPlayerNameObj.DetachChildren();
+
+                connectedPlayerNameObj.name = "Player_" + _playerIndex.ToString();
+                connectedPlayerNameObj.transform.localPosition = new Vector3(100.0f, (_playerIndex * -100.0f), connectedPlayerNameObj.transform.localPosition.z);
+                
+                var connectedText = connectedPlayerNameObj.transform.GetComponent<TMPro.TMP_Text>();
+                connectedText.text = _newPlayerName;
+                connectedText.alignment = TMPro.TextAlignmentOptions.Left;
+                connectedText.fontSize = 30;
+                connectedText.fontStyle = TMPro.FontStyles.Normal;
+
+                connectedPlayersObject.Add(_playerIndex, connectedText);
             }
             SendMessage("H_ChangePlayerNameSuccess", _params);
         }
@@ -603,6 +646,11 @@ namespace AwkwardMP
                         OnGetGameInfo((int)message["_params"]["playerIndex"]);
                     }
                     break;
+                case "S_PlayerLeave":
+                    {
+                        AwkwardMP.Log.LogInfo($"PlayerLeave");
+                        OnPlayerLeave((int)message["_params"]["playerIndex"]);
+                    } break;
                 default:
                     break;
             }
