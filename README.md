@@ -27,6 +27,21 @@ The **AwkwardMP Mod** is a mod for [Awkward](https://store.steampowered.com/app/
 </details>
 
 
+# Installation
+
+## Windows Installation Steam
+1. Download the newest .zip File from the latest [release](https://github.com/AwkwardMP/awk_mod/releases/latest)
+2. Find the folder of your game. You can right click on the game in your library, a menu will appear, click on properties, local data, browse
+3. Go back one folder to common and make a copy of your "Awkward" game folder and paste it somewhere on the same drive.
+4. Now unzip and drag or extract the files from the .zip into your "Awkward" game folder that you just copied, at the `.exe` level (just into the folder).
+5. Run the game by starting the .exe from this folder (the first launch might take a while).
+
+# Credits & Resources
+
+[BepInEx](https://github.com/BepInEx) - Used to hook to game functions\
+[Among Us - TheOtherRoles](https://github.com/TheOtherRolesAU/TheOtherRoles) - Some code parts are used and inspired from their codebase
+
+
 # License
 AwkwardMP is licensed under the
 

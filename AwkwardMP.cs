@@ -12,16 +12,18 @@ using System;
 
 namespace AwkwardMP
 {
+    
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     public class AwkwardMP : BaseUnityPlugin
     {
+        public static string VersionString = "1.0.0";
         public Harmony Harmony { get; } = new Harmony(PluginInfo.PLUGIN_GUID);
 
         internal static ManualLogSource Log;
 
         public static ConfigEntry<string> WebSocketURL { get; private set; }
 
-        private static bool Initialised = false;
+        public static GameObject ModUpdaterObj;
 
         private void Awake()
         {
@@ -35,6 +37,7 @@ namespace AwkwardMP
 
 
             AddSceneChangeCallbacks();
+
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
         }
 
@@ -44,14 +47,20 @@ namespace AwkwardMP
             {
                 var sceneName = scene.name;
 
-                if (!Initialised && sceneName.Equals("2_MainMenu", StringComparison.Ordinal))
+                AwkwardMP.Log.LogInfo(scene.name);
+
+                if (sceneName.Equals("2_MainMenu", StringComparison.Ordinal))
                 {
-                    AwkwardClient.Init();
-                    Initialised = true;
+                    ModUpdaterObj = new("AWKUpdater") { layer = 5 };
+                    ModUpdaterObj.AddComponent<ModUpdater>();
+
+
+                    AwkwardClient.AddUI(GameObject.Find("Globals/TopMostCanvas(Clone)/SafeAreaScaler"));
                 }
 
                 if (sceneName.Equals("3_InGame", StringComparison.Ordinal))
                 {
+                    AwkwardClient.AddUI(GameObject.Find("Globals/TopMostCanvas(Clone)/SafeAreaScaler"));
                     AwkwardClient.Enable();
                 }
             };
