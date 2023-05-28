@@ -428,6 +428,17 @@ namespace AwkwardMP
             _PlayersRT[_playerIndex].GetComponent<UnityEngine.UI.Text>().text = "(Player " + (2 + _playerIndex) + ")";
         }
 
+        private static void OnPlayerReconnect(int _playerIndex, string _playerName)
+        {
+           
+            AwkwardPlayer _newPlayer = new AwkwardPlayer() { Index = _playerIndex, Name = _playerName };
+            Players.Add(_newPlayer);
+
+            UpdatePlayerName(_playerIndex, _playerName);
+
+            SendMessage("H_PlayerReconnectSuccess", new { roomId = RoomCode, playerIndex = _newPlayer.Index });
+        }
+
 
         private static void OnPlayerJoin(string _playerName, string _rndCode)
         {
@@ -768,6 +779,11 @@ namespace AwkwardMP
                         OnPlayerLeave((int)message["_params"]["playerIndex"]);
                     }
                     break;
+                case "S_ClientReconnect":
+                    {
+                        AwkwardMP.Log.LogInfo($"PlayerReconnect");
+                        OnPlayerReconnect((int)message["_params"]["playerIndex"], (string)message["_params"]["playerName"]);
+                    } break;
                 case "S_PlayerAnswer":
                     {
                         AwkwardMP.Log.LogInfo($"Answer! {message["_params"]["answer"]}");

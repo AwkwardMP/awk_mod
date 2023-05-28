@@ -16,7 +16,7 @@ namespace AwkwardMP
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     public class AwkwardMP : BaseUnityPlugin
     {
-        public static string VersionString = "1.0.0";
+        public static string VersionString = "1.0.1";
         public Harmony Harmony { get; } = new Harmony(PluginInfo.PLUGIN_GUID);
 
         internal static ManualLogSource Log;
@@ -37,7 +37,6 @@ namespace AwkwardMP
 
 
             AddSceneChangeCallbacks();
-
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
         }
 

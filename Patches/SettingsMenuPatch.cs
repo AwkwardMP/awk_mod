@@ -32,7 +32,9 @@ namespace AwkwardMP.Patches
                 wsSettingsButton.EnableInput(true);
 
                 _wsSettingsButton = wsSettingsButton.GetComponent<MenuButton>();
-            } 
+            }
+
+            InputManagerPatch.ResetButton();
         }
 
         private static void EditWebSocketURL()
@@ -49,6 +51,8 @@ namespace AwkwardMP.Patches
             string latestInput = Globals.TextInputWrapper.GetLatestInput();
 
             AwkwardMP.WebSocketURL.Value = latestInput;
+            AwkwardClient.StopSocket();
+            AwkwardClient.StartSocket();
         }
 
         [HarmonyPostfix]
