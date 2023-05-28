@@ -1,4 +1,3 @@
-![awkwardmp banner]()
 <p align="center">
   <img width="1200" height="200" src="./Images/AwkwardMP_Logo.png">
 </p>
@@ -15,7 +14,7 @@ For usage of our code, please read and respect the <a href="#license">license</a
 # AwkwardMP
 
 The **AwkwardMP Mod** is a mod for [Awkward](https://store.steampowered.com/app/769730/Awkward/) which adds some basic online multiplayer functionality.
-
+Create a Room from the Main Menu and let your friends visit [AwkwardMP.online](https://awkwardmp.online/) to join your Game.
 
   
 # Changelog
